@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 import AppBar from 'material-ui/AppBar';
 import './App.css';
 
@@ -10,42 +8,47 @@ import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
 
-function leftIcon() {
-  alert('You touch the left icon!!');
-}
-function rightIcon() {
-  alert('You touch the right icon!!');
-}
-function titleTap(){
-  alert('You touch the title!!');
-}
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+
 const styles = {
   title: {
     cursor: 'pointer',
   },
 };
-
+//var injectTapEventPlugin = require("react-tap-event-plugin");
+injectTapEventPlugin();
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {open: false};
+  }
+
+  rightIcon = () => alert('You touch the right icon!!');
+  titleTap = () => alert('You touch the title!!');
+
+  drawToggle = () => this.setState({open:!this.state.open});
+  drawClose = () => this.setState({open: false})
   render() {
-    var injectTapEventPlugin = require("react-tap-event-plugin");
-    injectTapEventPlugin();
+    
     return (
       <div className="App">
-        <MuiThemeProvider 
-          muiTheme={getMuiTheme(darkBaseTheme)}>
-          <AppBar
-            title={<span style={styles.title}>Title</span>}
-            onLeftIconButtonTouchTap={leftIcon}
-            onRightIconButtonTouchTap={rightIcon}
-            onTitleTouchTap={titleTap}
-            iconElementLeft={
-              <IconButton>
-                <NavigationClose />
-              </IconButton>}
-            iconElementRight={
-              <FlatButton label="Save" />}
-          />
-        </MuiThemeProvider>
+        <AppBar
+          title="Title"
+          style={{backgroundColor:'rgb(0,128,0)'}}
+          onLeftIconButtonTouchTap={this.drawToggle}
+          onRightIconButtonTouchTap={this.rightIcon}
+          onTitleTouchTap={this.titleTap}
+        />
+        <Drawer 
+          open={this.state.open} 
+          docked={false}
+          onRequestChange={(open) => this.setState({open})}
+        >
+          <MenuItem onTouchTap={this.drawClose}>Menu Item</MenuItem>
+          <MenuItem onTouchTap={this.drawClose}>Menu Item 2</MenuItem>
+        </Drawer>
       </div>
     );
   }
